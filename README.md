@@ -1,4 +1,4 @@
-# IBM Watson Personality Insights API with Flask for Prediction using Text
+# IBM Watson Personality Insights API with Flask for Prediction Personality Traits using Text
 
 This app can can run on Flask using IBM Watson Personality Insights API Credentials.
 
