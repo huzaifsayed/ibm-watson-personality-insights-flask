@@ -5,3 +5,9 @@ This app can can run on Flask using IBM Watson Personality Insights API Credenti
 Use link - https://www.nicholasrenotte.com/how-to-develop-customer-profiles-using-ibm-watson-personality-insights/
 
 For using the project change the api key and url from flask_app.py
+
+
+`
+url = 'your-ibm-watson-perosnality-insights-url'
+apikey = 'your-ibm-watson-perosnality-insights-apikey'
+`
