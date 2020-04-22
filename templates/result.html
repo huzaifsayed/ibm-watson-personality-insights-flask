@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Find your Personality using AI</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+    <style>
+        #loader {
+            border: 12px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 12px solid #444444;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .center {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="jumbotron text-center" style="margin-bottom:0">
+        <h1>Find your Personality using AI</h1>
+        <h4 class="text-center">Your Personality Result</h4>
+    </div>
+    <div class="container" style="margin-top:30px">
+        <div class="row justify-content-md-center">
+            <div class="col-sm-12">
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-6">
+                        <div id="chart1"></div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div id="chart2"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div id="chart3"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div id="chart4"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div id="chart5"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div id="chart6"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div id="chart7"></div>
+                    </div>
+                </div>
+                <div class="row justify-content-md-center">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <h4>Personality characteristics<h4>
+                                <p>The Personality Insights service infers personality characteristics based on three primary models:</p>
+                                <ul>
+                                    <li><strong>Big Five</strong> personality characteristics represent the most widely used model for
+                                        generally describing how a person engages with the world. The model includes five primary
+                                        dimensions: <em>Agreeableness</em>, <em>Conscientiousness</em>,
+                                        <em>Extraversion</em>, <em>Emotional range</em>, and <em>Openness</em>. Each dimension has six
+                                        facets that further characterize an individual according to the dimension.</li>
+                                    <li><strong>Needs</strong> describe which aspects of a product are likely to resonate with a person. The
+                                        model includes twelve characteristic needs: <em>Excitement</em>, <em>Harmony</em>,
+                                        <em>Curiosity</em>, <em>Ideal</em>, <em>Closeness</em>,
+                                        <em>Self-expression</em>, <em>Liberty</em>, <em>Love</em>, <em>Practicality</em>,
+                                        <em>Stability</em>, <em>Challenge</em>, and <em>Structure</em>.</li>
+                                    <li><strong>Values</strong> describe motivating factors that influence a person's decision making. The
+                                        model includes five values: <em>Self-transcendence / Helping others</em>, <em>Conservation /
+                                            Tradition</em>, <em>Hedonism / Taking pleasure in life</em>,
+                                        <em>Self-enhancement / Achieving success</em>, and <em>Open to change / Excitement</em>.</li>
+                                </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    <div class="text-center"><a href="{{ url_for('main') }}" class="btn btn-info" role="button">Go Back</a></div>
+    <br><br>
+    
+
+            <br><br>
+            <div class="jumbotron text-center" style="margin-bottom:0">
+                <p>I am <a href="https://www.linkedin.com/in/huzaifsayed/">Huzaif Sayyed</a> and love to play with data.
+                </p>
+                <p>This app is made using <a href="https://www.ibm.com/watson/services/personality-insights/">IBM Watson
+                        Personality Insights</a>.</p>
+            </div>
+
+            <div id="loader" class="center"></div>
+
+            <script>
+                document.onreadystatechange = function () {
+                    if (document.readyState !== "complete") {
+                        document.querySelector(
+                            "body").style.visibility = "hidden";
+                        document.querySelector(
+                            "#loader").style.visibility = "visible";
+                    } else {
+                        document.querySelector(
+                            "#loader").style.display = "none";
+                        document.querySelector(
+                            "body").style.visibility = "visible";
+                    }
+                }; 
+            </script>
+
+            <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+            <script type="text/javascript">
+                // Load google charts
+                google.charts.load('current', { 'packages': ['corechart'] });
+                google.charts.setOnLoadCallback(drawChart);
+
+
+                // Draw the chart and set the chart values
+                function drawChart() {
+
+                    var data1 = google.visualization.arrayToDataTable([
+                        ['Values', 'Percentile', { role: 'style' }],
+                        {% for key, value in result_values.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+
+                var data2 = google.visualization.arrayToDataTable([
+                    ['Personality', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_needs.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+
+                {% for count, result_personality1 in result_personality %}
+                {% if count == 0 %}
+                var data3 = google.visualization.arrayToDataTable([
+                    ['Need', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_personality1.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+                {% endif %}
+                {% if count == 1 %}
+                var data4 = google.visualization.arrayToDataTable([
+                    ['Need', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_personality1.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+                {% endif %}
+                {% if count == 2 %}
+                var data5 = google.visualization.arrayToDataTable([
+                    ['Need', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_personality1.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+                {% endif %}
+                {% if count == 3 %}
+                var data6 = google.visualization.arrayToDataTable([
+                    ['Need', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_personality1.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+                {% endif %}
+                {% if count == 4 %}
+                var data7 = google.visualization.arrayToDataTable([
+                    ['Need', 'Percentile', { role: 'style' }],
+                    {% for key, value in result_personality1.items() %}
+                ['{{ key }}', {{ value }}, 'color: {{color[loop.index0]}}'],
+                    {% endfor %}
+            ]);
+                {% endif %}
+                {% endfor %}
+
+                // Display the chart inside the <div> element with id="piechart"
+                var chart1 = new google.visualization.ColumnChart(document.getElementById('chart1'));
+                chart1.draw(data1, { 'title': 'Values', 'height': 400, legend: { position: "none" } });
+                var chart2 = new google.visualization.ColumnChart(document.getElementById('chart2'));
+                chart2.draw(data2, { 'title': 'Needs', 'height': 400, legend: { position: "none" } });
+                var chart3 = new google.visualization.ColumnChart(document.getElementById('chart3'));
+                chart3.draw(data3, { 'title': 'Name - Openness, Category - Personality', 'height': 400, legend: { position: "none" } });
+                var chart4 = new google.visualization.ColumnChart(document.getElementById('chart4'));
+                chart4.draw(data4, { 'title': 'Name - Conscientiousness, Category - Personality', 'height': 400, legend: { position: "none" } });
+                var chart5 = new google.visualization.ColumnChart(document.getElementById('chart5'));
+                chart5.draw(data5, { 'title': 'Name - Extraversion, Category - Personality', 'height': 400, legend: { position: "none" } });
+                var chart6 = new google.visualization.ColumnChart(document.getElementById('chart6'));
+                chart6.draw(data6, { 'title': 'Name - Agreeableness, Category - Personality', 'height': 400, legend: { position: "none" } });
+                var chart7 = new google.visualization.ColumnChart(document.getElementById('chart7'));
+                chart7.draw(data7, { 'title': 'Name - Emotional Range, Category - Personality', 'height': 400, legend: { position: "none" } });
+        }
+            </script>
+
+</body>
+
+</html>
